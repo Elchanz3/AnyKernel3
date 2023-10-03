@@ -47,90 +47,16 @@ insert_line() {
   fi;
 }
 
-ui_print "××××××××××××××××××××××××××××××××××××××××××××××××"
+ui_print "×××××××××××××××××××××××××××××××××××××××××××××××"
 ui_print "×     POWERGAMING KERNEL by @Elchanz3         ×"
 ui_print "×××××××××××××××××××××××××××××××××××××××××××××××"
 ui_print " "
+if [ -f banner ]; then
+  ui_printfile banner;
+  ui_print " " " ";
+fi;
 ui_print " "
-ui_print "   .--."
-ui_print "   |o_o |"
-ui_print "   |:_/ |"
-ui_print "  //   ///"
-ui_print " (|     | )"
-ui_print "/'/_   _/ /"
-ui_print "/___)=(___/"
-ui_print " "
-ui_print "Linux™ by Linus Torvalds "
-ui_print " "
-ui_print " "
-ui_print "The objectives of this Kernel are: "
-ui_print " "
-ui_print "-reduce power consumption "
-ui_print "-lower device temperature "
-ui_print "-improve performance "
-ui_print "-make it smoother "
-ui_print "-enhance RAM management "
-ui_print "-extend device capabilities "
-ui_print "-and much more... "
-ui_print " "
-ui_print " "
-ui_print "Main changes:"
-ui_print " "
-ui_print "×××××××××××××××××××××××××××××××××××××××××××××××"
-ui_print "-GPU OC up to 820MHz (stable)
-"
-ui_print " "
-ui_print "-GPU UC to 150MHz (idle)
-"
-ui_print " "
-ui_print "-GPU Undervoltage -40mV
-"
-ui_print " "
-ui_print "-memory power savings when idle
-"
-ui_print " "
-ui_print "-a lot of famous CPU governors (using modded Schedutil by @Elchanz22)
-"
-ui_print " "
-ui_print "-+7 New I/O Schedulers (Zen as default)
-"
-ui_print " "
-ui_print "-special arguments for bootloader command line (lower boot time)
-"
-ui_print " "
-ui_print "-Adreno boost (Mid boost as default)
-"
-ui_print " "
-ui_print "-Adreno idler (modded for better battery life)
-"
-ui_print " "
-ui_print "-thermal mods
-"
-ui_print " "
-ui_print "-USB fast charging
-"
-ui_print " "
-ui_print "-support for sdFAT
-"
-ui_print " "
-ui_print "-ZRAM, vnswap, zswap support
-"
-ui_print " "
-ui_print "-vibrator intensity control support
-"
-ui_print " "
-ui_print "-led control support
-"
-ui_print " "
-ui_print "-devfreq boost driver
-"
-ui_print " "
-ui_print "×××××××××××××××××××××××××××××××××××××××××××××××"
-ui_print " "
-ui_print "× Loading necessary files for installation, please wait...     "
-ui_print " "
-ui_print "× Initializing parameters and properties..."
-
+ui_print "× Inicializando parâmetros e propriedades..."
 show_progress() { echo "progress $1 $2" >> $OUTFD; }
 file_getprop() { $BB grep "^$2=" "$1" | $BB cut -d= -f2-; }
 find_slot() {
@@ -548,7 +474,7 @@ mkdir -p $AKHOME/bin;
 cd $AKHOME;
 unzip -o "$ZIPFILE";
 if [ $? != 0 -o ! "$(ls tools)" ]; then
-  abort "× × unzip error aborting!";
+  abort "× × Falha ao descompactar. Abortando!";
 fi;
 for ARCH32 in x86 arm; do
   if [ -d $AKHOME/tools/$ARCH32 ]; then
@@ -566,7 +492,7 @@ chmod 755 $BB;
 $BB chmod -R 755 tools bin;
 $BB --install -s bin;
 if [ $? != 0 -o -z "$(ls bin)" ]; then
-  abort "× busybox fail.. abort!";
+  abort "× A configuração do Busybox falhou. Abortando!";
 fi;
 
 setup_env;
@@ -576,21 +502,13 @@ do_versioncheck;
 do_levelcheck;
 print_extras;
 
-# volume key check
-
-ui_print "volume check... press volume + to install.. and volume - to cancel "
-if [ "$KEYVOL" == "up" ]; then
-  ui_print "installing PGK"
-  CORE=$($BB grep -oE 'ak.*core.sh' anykernel.sh)
-  [ -f tools/$CORE ] || $BB ln -s $AKHOME/tools/ak*-core.sh $AKHOME/tools/$CORE
-  PATH="$AKHOME/bin:$PATH" home=$AKHOME $BB ash anykernel.sh $2
-  if [ $? != 0 ]; then
-    abort
-  fi
-else
-  ui_print "installation aborted due to user choice..."
-  abort
-fi
+ui_print "× Instalando kernel Linux aguarde...";
+CORE=$($BB grep -oE 'ak.*core.sh' anykernel.sh);
+[ -f tools/$CORE ] || $BB ln -s $AKHOME/tools/ak*-core.sh $AKHOME/tools/$CORE;
+PATH="$AKHOME/bin:$PATH" home=$AKHOME $BB ash anykernel.sh $2;
+if [ $? != 0 ]; then
+  abort;
+fi;
 
 # Copy init scripts
 $BB mount -o rw,remount -t auto /vendor 2>/dev/null;
@@ -607,15 +525,10 @@ if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
 
+ui_print "× Kernel fleshado com sucesso...!";
+ui_print "× obrigado por escolher o melhor kernel para linha 9!";
+ui_print "× baseado no AnyKernel3 por @osm0sis";
 ui_print " "
-ui_print "× Kernel flashed successfully...!"
-ui_print "× Thank you for choosing the best kernel for the Line 9!"
 ui_print " "
-ui_print "× Installer based on AnyKernel3 (updated) by @osm0sis"
-ui_print " "
-ui_print "Kernel channel: https://Klimbokernel_SD845"
-ui_print "Questions and bug reports group: https://t.me/klimbokernel"
-ui_print " "
-ui_print "The installation is complete. Please restart your phone to apply the changes..."
-ui_print " "
+ui_print " instalação completa por gentileza reinicie seu telefone..."
 ui_print "×××××××××××××××××××××××××××××××××××××××××××××××"
